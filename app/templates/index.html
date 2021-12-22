@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>График</title>
+  </head>
+  <body>
+    <div id="line-chart"></div>
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+      var lineDiv = document.getElementById('line-chart');
+      var traceA = {
+        x: {{embeddings.short[0].tolist()}},
+        y: {{embeddings.short[1].tolist()}},
+        text:[{% for t in short%}"{{t}}",{% endfor %}],
+        name: 'Короткая стори',
+        mode: 'markers',
+        type: 'scatter'
+      };
+      var traceB = {
+        x: {{embeddings.long[0].tolist()}},
+        y: {{embeddings.long[1].tolist()}},
+        text:[{% for t in long%}"{{t}}",{% endfor %}],
+        name: 'Длинная стори',
+        mode: 'markers',
+        type: 'scatter'
+      };
+
+      var data = [traceA,traceB];
+
+      var layout = {
+        title:'Примерное расположение сторей',
+        height: 550,
+        font: {
+          family: 'Lato',
+          size: 16,
+          color: 'rgb(100,150,200)'
+        },
+        plot_bgcolor: 'rgba(200,255,0,0.1)',
+        margin: {
+          pad: 10
+        },
+      };
+
+      Plotly.plot( lineDiv, data, layout );
+    </script>
+  </body>
+</html>
