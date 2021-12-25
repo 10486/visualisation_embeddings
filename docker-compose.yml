@@ -1,0 +1,16 @@
+version: '2.3'
+
+services:
+  sklokovo_graphs:
+    image: sklokovo_graphs
+    container_name: sklokovo_graphs
+    env_file:
+      - .env
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/application
+    build:
+      context: .
+      network: host
+      dockerfile: ./Dockerfile
