@@ -9,64 +9,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
   </head>
   <body>
-    <div id="line-chart"></div>
-    <div id="slider">
+    <div id="main-vue">
       <v-app>
         <v-main>
-          <v-slider max="100" min="0" v-model="perplexity" thumb-label>
-          </v-slider>
-          <a :href="'/'+perplexity" class="text-decoration-none"><v-btn>Обновить</v-btn></a>
+          <template>
+            <v-card class="mx-auto" max-width="600" tile>
+              <v-list dense>
+                <v-subheader>Список экспериментов</v-subheader>
+                <v-list-item-group color="primary">
+                  <v-list-item v-for="(run, i) in runs" :key="i">
+                    <a :href="'/' + run">
+                      <v-list-item-content>
+                        <v-list-item-title v-text="run"></v-list-item-title>
+                      </v-list-item-content>
+                    </a>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
+          </template>
         </v-main>
       </v-app>
     </div>
   </body>
-  <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script>
     new Vue({
       delimiters: ['<%', '%>'],
-      el: '#slider',
+      el: '#main-vue',
       vuetify: new Vuetify(),
       data:{
-        perplexity:{{perplexity}}
+        runs: [{% for run in runs%}"{{run}}",{% endfor %}]
       }
     })
-
-    var lineDiv = document.getElementById('line-chart');
-    var traceA = {
-      x: {{embeddings.short[0].tolist()}},
-      y: {{embeddings.short[1].tolist()}},
-      text:[{% for t in short%}"{{t}}",{% endfor %}],
-      name: 'Короткая стори',
-      mode: 'markers',
-      type: 'scatter'
-    };
-    var traceB = {
-      x: {{embeddings.long[0].tolist()}},
-      y: {{embeddings.long[1].tolist()}},
-      text:[{% for t in long%}"{{t}}",{% endfor %}],
-      name: 'Длинная стори',
-      mode: 'markers',
-      type: 'scatter'
-    };
-
-    var data = [traceA,traceB];
-
-    var layout = {
-      title:'Примерное расположение сторей',
-      height: 550,
-      font: {
-        family: 'Lato',
-        size: 16,
-        color: 'rgb(100,150,200)'
-      },
-      plot_bgcolor: 'rgba(200,255,0,0.1)',
-      margin: {
-        pad: 10
-      },
-    };
-    Plotly.plot( lineDiv, data, layout );
-
   </script>
 </html>

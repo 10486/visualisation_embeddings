@@ -4,7 +4,7 @@ import pandas as pd
 import mlflow
 import shutil
 
-def download_mlflow_artifacts(experiment_name, artifact_paths):
+def download_mlflow_artifacts(experiment_name, artifact_paths, dist_path):
     client = MlflowClient()
     experiment_id = client.get_experiment_by_name(experiment_name).experiment_id
     df = mlflow.search_runs([experiment_id])
@@ -13,9 +13,9 @@ def download_mlflow_artifacts(experiment_name, artifact_paths):
         "end_date": df["end_time"].dt.date,
         "end_time": df["end_time"].dt.strftime("%H:%M")
     })
-    data = data.loc[:4,:]
+    data = data.loc[:1,:]
 
-    path = Path(f"./app/data/")
+
     print("Выгрузка данных с 5 последних экспериментов")
     for run_id in data["run_id"]:
         download_run_artifacts(client, run_id, path, artifact_paths)
@@ -32,7 +32,8 @@ def download_run_artifacts(client, run_id, path, artifact_paths):
 
 
 if __name__ == '__main__':
-    artifact_paths = ["distance analyze"]
+    artifact_paths = ["embeddings", "sentences"]
     experiment_name = "Skolkovo_4"
-    # добавить удаление папки data
-    download_mlflow_artifacts(experiment_name, artifact_paths)
+    path = Path(f"./app/data/")
+    shutil.rmtree(path)
+    download_mlflow_artifacts(experiment_name, artifact_paths, path)
